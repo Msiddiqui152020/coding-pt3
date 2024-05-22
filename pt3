@@ -1,0 +1,173 @@
+import java.util.Scanner;
+
+public class RestaurantBillingSoftware {
+
+    // 2D array to store menu items and prices
+    static String[][] menu = {
+            {"Burger", "10.99"},
+            {"Pizza", "12.99"},
+            {"Pasta", "8.99"},
+            // Add more items as needed
+    };
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("What do you want to do?");
+            System.out.println("1. Calculate a total");
+            System.out.println("2. Add an item to the menu");
+            System.out.println("3. Delete an item from the menu");
+            System.out.println("4. Change the price of an item");
+            System.out.println("5. Exit");
+
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    calculateTotal();
+                    break;
+                case 2:
+                    addItem();
+                    break;
+                case 3:
+                    deleteItem();
+                    break;
+                case 4:
+                    changePrice();
+                    break;
+                case 5:
+                    System.out.println("Exiting program. Goodbye!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 5.");
+            }
+        }
+    }
+
+    // Method to calculate the total based on user input
+    private static void calculateTotal() {
+        Scanner scanner = new Scanner(System.in);
+        double total = 0;
+
+        System.out.println("Enter items ordered (type 'done' when finished):");
+
+        while (true) {
+            String itemName = scanner.next();
+
+            if (itemName.equals("done")) {
+                break;
+            }
+
+            double itemPrice = getItemPrice(itemName);
+
+            if (itemPrice == -1) {
+                System.out.println("Item not found in the menu. Please enter a valid item.");
+            } else {
+                total += itemPrice;
+            }
+        }
+
+        System.out.println("Total: $" + total);
+    }
+
+    // Method to add an item to the menu
+    private static void addItem() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the name of the item to add:");
+        String itemName = scanner.next();
+
+        System.out.println("Enter the price of the item:");
+        double itemPrice = scanner.nextDouble();
+
+        // Resize the menu array to accommodate the new item
+        menu = resizeArray(menu, menu.length + 1, 2);
+
+        // Add the new item to the menu
+        menu[menu.length - 1][0] = itemName;
+        menu[menu.length - 1][1] = Double.toString(itemPrice);
+
+        System.out.println(itemName + " has been added to the menu with a price of $" + itemPrice);
+    }
+
+    // Method to delete an item from the menu
+    private static void deleteItem() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the name of the item to delete:");
+        String itemName = scanner.next();
+
+        int index = findItemIndex(itemName);
+
+        if (index == -1) {
+            System.out.println("Item not found in the menu. Please enter a valid item.");
+        } else {
+            // Remove the item from the menu
+            for (int i = index; i < menu.length - 1; i++) {
+                menu[i][0] = menu[i + 1][0];
+                menu[i][1] = menu[i + 1][1];
+            }
+
+            // Resize the menu array to remove the last row
+            menu = resizeArray(menu, menu.length - 1, 2);
+
+            System.out.println(itemName + " has been deleted from the menu.");
+        }
+    }
+
+    // Method to change the price of an item
+    private static void changePrice() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter the name of the item whose price you want to change:");
+        String itemName = scanner.next();
+
+        int index = findItemIndex(itemName);
+
+        if (index == -1) {
+            System.out.println("Item not found in the menu. Please enter a valid item.");
+        } else {
+            System.out.println("Enter the new price for " + itemName + ":");
+            double newPrice = scanner.nextDouble();
+
+            // Update the price of the item
+            menu[index][1] = Double.toString(newPrice);
+
+            System.out.println("Price of " + itemName + " has been changed to $" + newPrice);
+        }
+    }
+
+    // Helper method to get the price of an item from the menu
+    private static double getItemPrice(String itemName) {
+        for (String[] item : menu) {
+            if (item[0].equalsIgnoreCase(itemName)) {
+                return Double.parseDouble(item[1]);
+            }
+        }
+        return -1; // Return -1 if item not found
+    }
+
+    // Helper method to find the index of an item in the menu
+    private static int findItemIndex(String itemName) {
+        for (int i = 0; i < menu.length; i++) {
+            if (menu[i][0].equalsIgnoreCase(itemName)) {
+                return i;
+            }
+        }
+        return -1; // Return -1 if item not found
+    }
+
+    // Helper method to resize a 2D array
+    private static String[][] resizeArray(String[][] array, int rows, int cols) {
+        String[][] newArray = new String[rows][cols];
+        int copyRows = Math.min(rows, array.length);
+        int copyCols = Math.min(cols, array[0].length);
+
+        for (int i = 0; i < copyRows; i++) {
+            System.arraycopy(array[i], 0, newArray[i], 0, copyCols);
+        }
+
+        return newArray;
+    }
+}
