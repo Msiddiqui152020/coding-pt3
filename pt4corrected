@@ -1,0 +1,132 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// MenuItem class represents a menu item with a name and price
+class MenuItem {
+    private String name;
+    private double price;
+
+    // Constructor to initialize the menu item
+    public MenuItem(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    // Getter for name
+    public String getName() {
+        return name;
+    }
+
+    // Setter for name
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Getter for price
+    public double getPrice() {
+        return price;
+    }
+
+    // Setter for price
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    // toString method for a one-line description of the menu item
+    public String toString() {
+        return name + ": $" + price;
+    }
+}
+
+// Menu class contains the main method and menu functionality
+public class Menu {
+    public static void main(String[] args) {
+        // Creating menu item objects for each item on the menu
+        MenuItem item1 = new MenuItem("Burger", 10.99);
+        MenuItem item2 = new MenuItem("Pizza", 12.50);
+        MenuItem item3 = new MenuItem("Salad", 7.99);
+
+        // Creating a list to store menu items
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(item1);
+        menuItems.add(item2);
+        menuItems.add(item3);
+
+        // Scanner for user input
+        Scanner scanner = new Scanner(System.in);
+
+        boolean exit = false;
+
+        // Main menu loop
+        while (!exit) {
+            // Print main menu
+            System.out.println("\nMain Menu:");
+            System.out.println("1. Calculate total");
+            System.out.println("2. Add an item to the menu");
+            System.out.println("3. Delete an item from the menu");
+            System.out.println("4. Change the price of an item");
+            System.out.println("5. Exit");
+
+            // Read user choice
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    // Calculate total
+                    double total = 0;
+                    System.out.println("Enter items ordered (type 'done' to finish):");
+                    String userInput = "";
+                    while (!userInput.equalsIgnoreCase("done")) {
+                        System.out.print("Item: ");
+                        userInput = scanner.next();
+                        if (!userInput.equalsIgnoreCase("done")) {
+                            for (MenuItem menuItem : menuItems) {
+                                if (menuItem.getName().equalsIgnoreCase(userInput)) {
+                                    total += menuItem.getPrice();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    System.out.println("Number of items: " + menuItems.size());
+                    System.out.println("Total: $" + total);
+                    break;
+
+                case 2:
+                    // Add an item to the menu
+                    System.out.print("Enter item name: ");
+                    String itemName = scanner.next();
+                    System.out.print("Enter item price: ");
+                    double itemPrice = scanner.nextDouble();
+                    MenuItem newItem = new MenuItem(itemName, itemPrice);
+                    menuItems.add(newItem);
+                    System.out.println("Item added to the menu: " + newItem);
+                    break;
+
+                case 3:
+                    // Delete an item from the menu
+                    System.out.print("Enter item name to delete: ");
+                    String itemToDelete = scanner.next();
+                    for (MenuItem menuItem : menuItems) {
+                        if (menuItem.getName().equalsIgnoreCase(itemToDelete)) {
+                            menuItems.remove(menuItem);
+                            System.out.println("Item deleted from the menu: " + menuItem);
+                            break;
+                        }
+                    }
+                    break;
+
+                case 4:
+                    // Change the price of an item
+                    System.out.print("Enter item name to change price: ");
+                    String itemToChange = scanner.next();
+                    for (MenuItem menuItem : menuItems) {
+                        if (menuItem.getName().equalsIgnoreCase(itemToChange)) {
+                            System.out.print("Enter new price: ");
+                            double newPrice = scanner.nextDouble();
+                            menuItem.setPrice(newPrice);
+                            System.out.println("Price changed for item: " + menuItem);
+                            break;
+                        }
+                    }
+                    break;
