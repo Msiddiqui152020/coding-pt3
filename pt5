@@ -1,0 +1,155 @@
+public class MenuItem {
+    private String name;
+    private double price;
+
+    public MenuItem(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    // Getter and Setter methods for name and price
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    // toString method to return a one-line description of the menu item
+    @Override
+    public String toString() {
+        return name + " - $" + price;
+    }
+}
+
+
+
+
+
+
+
+import java.util.Scanner;
+
+public class Menu {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Create an array of menu item objects for each item on the menu
+        MenuItem[] menuItems = {
+                new MenuItem("Item 1", 10.99),
+                new MenuItem("Item 2", 8.50),
+                // Add more menu items as needed
+        };
+
+        System.out.println("What do you want to do?");
+        System.out.println("1. Calculate total");
+        System.out.println("2. Add an item to the menu");
+        System.out.println("3. Delete an item from the menu");
+        System.out.println("4. Change the price of an item");
+
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1:
+                calculateTotal(menuItems, scanner);
+                break;
+            case 2:
+                addItemToMenu(menuItems, scanner);
+                break;
+            case 3:
+                deleteItemFromMenu(menuItems, scanner);
+                break;
+            case 4:
+                changePriceOfItem(menuItems, scanner);
+                break;
+            default:
+                System.out.println("Invalid choice");
+                break;
+        }
+    }
+
+    // Method to calculate the total based on items entered
+    private static void calculateTotal(MenuItem[] menuItems, Scanner scanner) {
+        // Print items offered
+        System.out.println("Items offered:");
+        for (MenuItem item : menuItems) {
+            System.out.println(item);
+        }
+
+        // Calculate total based on items entered
+        double total = 0;
+        System.out.println("Enter items ordered (press -1 to stop):");
+        while (true) {
+            String orderedItem = scanner.next();
+            if (orderedItem.equals("-1")) {
+                break;
+            }
+            for (MenuItem item : menuItems) {
+                if (item.getName().equalsIgnoreCase(orderedItem)) {
+                    total += item.getPrice();
+                    break;
+                }
+            }
+        }
+
+        // Print the number of items and total
+        System.out.println("Number of items ordered: " + menuItems.length);
+        System.out.println("Total: $" + total);
+    }
+
+    // Method to add an item to the menu
+    private static void addItemToMenu(MenuItem[] menuItems, Scanner scanner) {
+        System.out.println("Enter item name:");
+        String itemName = scanner.next();
+        System.out.println("Enter item price:");
+        double itemPrice = scanner.nextDouble();
+
+        // Create a new menu item object and add it to the menu
+        MenuItem newItem = new MenuItem(itemName, itemPrice);
+
+        // Resize the array (this is optional depending on your use case)
+        MenuItem[] updatedMenu = new MenuItem[menuItems.length + 1];
+        System.arraycopy(menuItems, 0, updatedMenu, 0, menuItems.length);
+        updatedMenu[menuItems.length] = newItem;
+
+        // Update the original menuItems array
+        menuItems = updatedMenu;
+    }
+
+    // Method to delete an item from the menu
+    private static void deleteItemFromMenu(MenuItem[] menuItems, Scanner scanner) {
+        System.out.println("Enter the name of the item to delete:");
+        String itemToDelete = scanner.next();
+
+        for (int i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].getName().equalsIgnoreCase(itemToDelete)) {
+                menuItems[i] = null; // Remove the item by setting it to null
+                break;
+            }
+        }
+    }
+
+    // Method to change the price of an item from the menu
+    private static void changePriceOfItem(MenuItem[] menuItems, Scanner scanner) {
+        System.out.println("Enter the name of the item to change the price:");
+        String itemToChange = scanner.next();
+        System.out.println("Enter the new price:");
+        double newPrice = scanner.nextDouble();
+
+        for (MenuItem item : menuItems) {
+            if (item.getName().equalsIgnoreCase(itemToChange)) {
+                item.setPrice(newPrice); // Update the price of the item
+                break;
+            }
+        }
+    }
+}
