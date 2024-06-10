@@ -1,0 +1,108 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class MenuItem {
+  String name;
+  double price;
+
+  public MenuItem(String name, double price) {
+    this.name = name;
+    this.price = price; 
+  }
+}
+
+public class Restaurant {
+
+  static ArrayList<MenuItem> menu = new ArrayList();
+
+  public static void main(String[] args) {
+
+    // Create menu items
+    menu.add(new MenuItem("Sandwich", 5.99)); 
+    menu.add(new MenuItem("Salad", 4.99));
+    menu.add(new MenuItem("Pizza", 8.99));
+
+    Scanner sc = new Scanner(System.in);
+    String choice = "";
+
+    while(!choice.equals("quit")) {
+
+      System.out.println("What would you like to do?");
+      System.out.println("(calculate total, add item, delete item, change price, quit)");
+
+      choice = sc.nextLine();
+
+      if(choice.equals("calculate total")) {
+        calculateTotal();
+      }
+      else if(choice.equals("add item")) {
+        addItem();
+      }
+      else if(choice.equals("delete item")) {
+        deleteItem();
+      }
+      else if(choice.equals("change price")) {
+        changePrice();
+      }
+
+    }
+
+    sc.close();
+
+  }
+
+  public static void calculateTotal() {
+
+    Scanner sc = new Scanner(System.in);
+
+    System.out.println("Enter items ordered:");
+    for(MenuItem item : menu) {
+      System.out.println(item.name + " - $" + item.price); 
+    }
+
+    double total = 0;
+    int count = 0;
+
+    while(true) {
+
+      System.out.print("Item name (or quit): ");
+      String itemName = sc.nextLine();
+
+      if(itemName.equals("quit")) {
+        break;
+      }
+
+      boolean found = false;
+      for(MenuItem item : menu) {
+        if(item.name.equals(itemName)) {
+          total += item.price;
+          count++;
+          found = true;
+          break;
+        }
+      }
+
+      if(!found) {
+        System.out.println("That item is not on the menu!");
+      }
+
+    }
+
+    System.out.println("Number of items: " + count);
+    System.out.printf("Total: $%.2f\n", total);
+
+  }
+
+  public static void addItem() {
+    // TODO
+  }
+
+  public static void deleteItem() {
+    // TODO 
+  }
+
+  public static void changePrice() {
+    // TODO
+  }
+
+}
